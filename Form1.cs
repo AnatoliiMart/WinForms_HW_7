@@ -6,7 +6,7 @@ namespace WinForms_HW_7
         {
             InitializeComponent();
             Text = Directory.GetCurrentDirectory();
-            textBox1.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height);
+            textBox1.Size = new Size(this.Size.Width, this.Size.Height);
         }
         private void tsb_NewDoc_Click(object sender, EventArgs e) => textBox1.Text = string.Empty;
 
@@ -19,27 +19,28 @@ namespace WinForms_HW_7
         private void tsb_Open_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog(this);
+
             FileStream stream = new(openFileDialog1.FileName, FileMode.Open, FileAccess.Read);
             StreamReader reader = new(stream);
-            if (stream.CanRead)
-            {
 
+            if (stream.CanRead)
                 textBox1.Text = reader.ReadToEnd();
-            }
             else
                 MessageBox.Show("Файла не существует", "Ошибка",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
+            reader.Close();
+            stream.Close();
         }
 
         private void tsb_Save_Click(object sender, EventArgs e)
         {
             saveFileDialog1.ShowDialog(this);
-            FileStream stream = new FileStream(saveFileDialog1.FileName + ".txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            StreamWriter writer = new StreamWriter(stream);
+
+            FileStream stream = new(saveFileDialog1.FileName + ".txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            StreamWriter writer = new(stream);
+
             if (stream.CanWrite)
-            {
                 writer.Write(textBox1.Text.ToString());
-            }
             else
                 MessageBox.Show("Невозможно сохранить файл", "Ошибка",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -66,10 +67,5 @@ namespace WinForms_HW_7
             textBox1.Font = fontDialog1.Font;
         }
 
-        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-            textBox1.ScrollToCaret();
-            textBox1.Focus();
-        }
     }
 }
